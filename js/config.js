@@ -8,8 +8,3 @@ window._config = {
         invokeUrl: '' // URL da API, caso haja
     }
 };
-
-    // Agora você pode usar secretHash ao enviar a solicitação de autenticação com Cognito
-    // Exemplo de chamada para API de autenticação, onde o secretHash seria passado
-    // exemploAuthFunction(secretHash);
-});
