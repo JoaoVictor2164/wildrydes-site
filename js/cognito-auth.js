@@ -1,7 +1,3 @@
-/*global WildRydes _config AmazonCognitoIdentity AWSCognito*/
-
-var WildRydes = window.WildRydes || {};
-
 (function scopeWrapper($) {
     var signinUrl = '/signin.html';
 
@@ -10,6 +6,7 @@ var WildRydes = window.WildRydes || {};
         ClientId: _config.cognito.userPoolClientId
     };
 
+    var clientSecret = '1ea60bafpueoq5t2u6ipbrb4806l4q1ajdmh60k78c88pmcp87is'; // Substitua pelo seu client secret real
     var userPool;
 
     if (!(_config.cognito.userPoolId &&
@@ -47,10 +44,18 @@ var WildRydes = window.WildRydes || {};
         }
     });
 
-
     /*
      * Cognito User Pool functions
      */
+    function calculateSecretHash(username) {
+        // Calculando o SECRET_HASH usando o clientSecret e o username (e-mail)
+        var message = username + _config.cognito.userPoolClientId;
+        var hmac = new AmazonCognitoIdentity.CognitoUserAuthenticationDetails({
+            Username: message,
+            Secret: clientSecret
+        });
+        return hmac.getHash(message);
+    }
 
     function register(email, password, onSuccess, onFailure) {
         var dataEmail = {
@@ -73,7 +78,8 @@ var WildRydes = window.WildRydes || {};
     function signin(email, password, onSuccess, onFailure) {
         var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
             Username: toUsername(email),
-            Password: password
+            Password: password,
+            SecretHash: calculateSecretHash(email) // Incluindo o SECRET_HASH
         });
 
         var cognitoUser = createCognitoUser(email);
