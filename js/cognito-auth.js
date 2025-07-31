@@ -1,3 +1,5 @@
+var WildRydes = window.WildRydes || {}; // Inicializa a variável WildRydes, se não estiver definida
+
 (function scopeWrapper($) {
     var signinUrl = '/signin.html';
 
